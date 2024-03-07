@@ -1,6 +1,6 @@
 # CodeAudit - CLI Tool for verifying syntax consistency of your codebases
 
-This simple terminal tool allows you to check for syntax consistency around various items such as naming, spacing, semi-colons, etc. 
+This simple terminal tool allows you to check for syntax consistency around various items such as naming, spacing, semi-colons, etc. I guess it's pretty much a linter 😂.
 
 I created this tool, because I realized a lot of teams focus on things like optimization, whether to use a simple for-loop or array methods, and strict typing to solve and find bugs. While these are good to discuss, I have found that sometimes bugs can come from simple things, such as miss naming variable names, indentation issues (Python or callback hell situations), and just lack of consistency throughout codebases. 
 
