@@ -60,8 +60,8 @@ func main() {
 			}
 			isFlag, err := regexp.MatchString("-", terminalArgs[1])
 			if err != nil {
-
-				panic(err)
+				utils.ErrorPrintLn("Unexpected error occurred while checking for flag")
+				return
 			}
 
 			if isFlag {
@@ -72,16 +72,14 @@ func main() {
 					fileType = ".js"
 				case "p":
 					fileType = ".py"
-				case "t":
-					fileType = ".ts"
-				case "g":
-					fileType = ".go"
+				// case "t":
+				// 	fileType = ".ts"
+				// case "g":
+				// 	fileType = ".go"
 				default:
+					utils.WarningPrintLn("Invalid file type provided. Using default file type (.js)")
 					fileType = ".js"
 				}
-
-			} else {
-				panic("Unknown value for flag found")
 			}
 		}
 	}
@@ -143,22 +141,40 @@ func main() {
 	utils.DefaultPrintLn(fmt.Sprintf("Directory testing: %s", root_directory))
 
 	var report models.ConsistencyReport
+	var foundFiles []string
 	checksRan := true
 
 	switch check {
 	case "all":
-		report = checks.PerformAllChecks(root_directory, fileType, defaultVariableNamingConvention, defaultIndentationSpaces, defaultCharacterLimit, defaultSemiColonUsage)
+		result, files := checks.PerformAllChecks(root_directory, fileType, defaultVariableNamingConvention, defaultIndentationSpaces, defaultCharacterLimit, defaultSemiColonUsage)
+		report = result
+		foundFiles = files
 	case "indent":
-		report = checks.PerformIndentationChecks(root_directory, fileType, defaultIndentationSpaces)
+		result, files := checks.PerformIndentationChecks(root_directory, fileType, defaultIndentationSpaces)
+		report = result
+		foundFiles = files
 	case "naming":
-		report = checks.PerformVariableNamingChecks(root_directory, fileType, defaultVariableNamingConvention)
+		result, files := checks.PerformVariableNamingChecks(root_directory, fileType, defaultVariableNamingConvention)
+		report = result
+		foundFiles = files
 	case "char":
-		report = checks.PerformCharacterCountChecks(root_directory, fileType, defaultCharacterLimit)
+		result, files := checks.PerformCharacterCountChecks(root_directory, fileType, defaultCharacterLimit)
+		report = result
+		foundFiles = files
 	case "semi":
-		report = checks.PerformSemiColonChecks(root_directory, fileType, defaultSemiColonUsage)
+		result, files := checks.PerformSemiColonChecks(root_directory, fileType, defaultSemiColonUsage)
+		report = result
+		foundFiles = files
 	default:
 		checksRan = false
 		utils.ErrorPrintLn("unexpected command please try again")
+	}
+
+	if len(foundFiles) == 0 {
+		utils.ErrorPrintLn("No files found in the specified directory matching the file type provided.")
+		return
+	} else {
+		utils.DefaultPrintLn(fmt.Sprintf("Number of files tested: %d", len(foundFiles)))
 	}
 
 	if checksRan {

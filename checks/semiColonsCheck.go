@@ -59,18 +59,20 @@ func checkIfSemiColonsPresentInFile(path string, semiColonsAllowed bool) models.
 func MakeSemiColonChecks(files []string, semiColonsAllowed bool) models.CompleteCheckResult {
 	scores := []int{}
 	issues := []models.IssueData{}
-	if semiColonsAllowed {
-		scores = append(scores, 100)
-	} else {
-		for i := 0; i < len(files); i++ {
-			utils.InfoPrintLn(fmt.Sprintf("Performing semi-colon checks on file %s", files[i]))
+
+	for i := 0; i < len(files); i++ {
+		utils.InfoPrintLn(fmt.Sprintf("Performing semi-colon checks on file %s", files[i]))
+
+		if semiColonsAllowed {
+			scores = append(scores, 100)
+		} else {
 			result := checkIfSemiColonsPresentInFile(files[i], semiColonsAllowed)
 			scores = append(scores, result.ConsistencyScore)
-
 			for a := 0; a < len(result.LinesFailed); a++ {
 				issues = append(issues, models.IssueData{Line: result.LinesFailed[a], File: result.File, Issue: "Semi-colons not allowed"})
 			}
 		}
+
 	}
 
 	totalScore := 0

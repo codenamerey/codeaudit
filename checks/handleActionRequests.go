@@ -16,9 +16,11 @@ func logSyntaxConsistencyScore(score int) {
 	}
 }
 
-func PerformAllChecks(root_directory string, fileType string, name_convention string, indentation int, char_count int, allow_semicolons bool) models.ConsistencyReport {
+func PerformAllChecks(root_directory string, fileType string, name_convention string, indentation int, char_count int, allow_semicolons bool) (models.ConsistencyReport, []string) {
 	files := utils.GetCorrectFiles(root_directory, fileType)
-
+	if len(files) == 0 {
+		return models.ConsistencyReport{}, files
+	}
 	result1 := MakeNamingConventionChecks(files, name_convention, fileType)
 	result2 := MakeIndentionChecks(files, indentation)
 	result3 := MakeCharacterCountChecks(files, char_count)
@@ -41,13 +43,15 @@ func PerformAllChecks(root_directory string, fileType string, name_convention st
 	}
 
 	logSyntaxConsistencyScore(fullReport.CodeBaseConsistencyScore)
-	return fullReport
+	return fullReport, files
 
 }
 
-func PerformSemiColonChecks(root_directory string, fileType string, allow_semicolons bool) models.ConsistencyReport {
+func PerformSemiColonChecks(root_directory string, fileType string, allow_semicolons bool) (models.ConsistencyReport, []string) {
 	files := utils.GetCorrectFiles(root_directory, fileType)
-
+	if len(files) == 0 {
+		return models.ConsistencyReport{}, files
+	}
 	result1 := MakeSemiColonChecks(files, allow_semicolons)
 
 	results := []models.CompleteCheckResult{result1}
@@ -62,13 +66,15 @@ func PerformSemiColonChecks(root_directory string, fileType string, allow_semico
 		utils.InfoPrintLn(fmt.Sprintf("Check \"%s\" score: %d%%", resultEntry.CheckType, resultEntry.FinalConsistencyScore))
 	}
 	logSyntaxConsistencyScore(fullReport.CodeBaseConsistencyScore)
-	return fullReport
+	return fullReport, files
 
 }
 
-func PerformCharacterCountChecks(root_directory string, fileType string, char_count int) models.ConsistencyReport {
+func PerformCharacterCountChecks(root_directory string, fileType string, char_count int) (models.ConsistencyReport, []string) {
 	files := utils.GetCorrectFiles(root_directory, fileType)
-
+	if len(files) == 0 {
+		return models.ConsistencyReport{}, files
+	}
 	result1 := MakeCharacterCountChecks(files, char_count)
 
 	results := []models.CompleteCheckResult{result1}
@@ -83,12 +89,14 @@ func PerformCharacterCountChecks(root_directory string, fileType string, char_co
 		utils.InfoPrintLn(fmt.Sprintf("Check \"%s\" score: %d%%", resultEntry.CheckType, resultEntry.FinalConsistencyScore))
 	}
 	logSyntaxConsistencyScore(fullReport.CodeBaseConsistencyScore)
-	return fullReport
+	return fullReport, files
 }
 
-func PerformVariableNamingChecks(root_directory string, fileType string, name_convention string) models.ConsistencyReport {
+func PerformVariableNamingChecks(root_directory string, fileType string, name_convention string) (models.ConsistencyReport, []string) {
 	files := utils.GetCorrectFiles(root_directory, fileType)
-
+	if len(files) == 0 {
+		return models.ConsistencyReport{}, files
+	}
 	result1 := MakeNamingConventionChecks(files, name_convention, fileType)
 
 	results := []models.CompleteCheckResult{result1}
@@ -103,12 +111,14 @@ func PerformVariableNamingChecks(root_directory string, fileType string, name_co
 		utils.InfoPrintLn(fmt.Sprintf("Check \"%s\" score: %d%%", resultEntry.CheckType, resultEntry.FinalConsistencyScore))
 	}
 	logSyntaxConsistencyScore(fullReport.CodeBaseConsistencyScore)
-	return fullReport
+	return fullReport, files
 }
 
-func PerformIndentationChecks(root_directory string, fileType string, indentation int) models.ConsistencyReport {
+func PerformIndentationChecks(root_directory string, fileType string, indentation int) (models.ConsistencyReport, []string) {
 	files := utils.GetCorrectFiles(root_directory, fileType)
-
+	if len(files) == 0 {
+		return models.ConsistencyReport{}, files
+	}
 	result1 := MakeIndentionChecks(files, indentation)
 
 	results := []models.CompleteCheckResult{result1}
@@ -123,5 +133,5 @@ func PerformIndentationChecks(root_directory string, fileType string, indentatio
 		utils.InfoPrintLn(fmt.Sprintf("Check \"%s\" score: %d%%", resultEntry.CheckType, resultEntry.FinalConsistencyScore))
 	}
 	logSyntaxConsistencyScore(fullReport.CodeBaseConsistencyScore)
-	return fullReport
+	return fullReport, files
 }
