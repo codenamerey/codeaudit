@@ -5,17 +5,17 @@ import (
 	"testing"
 )
 
-func TestIsConfigOptionHappyPath(t *testing.T) {
+func TestIsConfigFlagHappyPath(t *testing.T) {
 	mockTerminalArg := "r=true"
-	valueIsConfig := utils.IsConfigOption(mockTerminalArg)
+	valueIsConfig := utils.IsConfigFlag(mockTerminalArg)
 	if !valueIsConfig {
 		t.Fatalf("The argument used wasn't a valid config options argument. Found %s", mockTerminalArg)
 	}
 }
 
-func TestIsConfigOptionFailure(t *testing.T) {
+func TestIsConfigFlagFailure(t *testing.T) {
 	mockTerminalArg := "-f"
-	valueIsConfig := utils.IsConfigOption(mockTerminalArg)
+	valueIsConfig := utils.IsConfigFlag(mockTerminalArg)
 	if valueIsConfig {
 		t.Fatalf("The argument used was unexpectedly a valid config options argument. Found %s", mockTerminalArg)
 	}

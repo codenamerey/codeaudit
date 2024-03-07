@@ -46,23 +46,38 @@ _<small> <span>__Cool Fact:__</span> You can also install package globally by se
 ## Command Line Syntax
 
 ```shell
-./codeAudit [check_type] -[flag] [path] [config_initial]=[config_value]
+./codeAudit [CHECK_TYPE] -[FLAG] [PATH] --[OPTION]=[OPTION_VALUE]
 ```
 
-### BreakDown
+<br>
+
+### Argument Components BreakDown
 
 | Command | Purpose | values |
 |---------|---------|--------|
 | Check Type | The type of check you would like to make  |  all, indent, naming, char, semi. Default: all|
-| Flag | Dictates type file extension to query for | j (javascript), p (python). Default: j |
+| Language Option | Dictates type file extension to query for | j (javascript), p (python). Default: j |
 | Path | Path to desired desired directory to recursively search through for files| default ./ (cwd)|
-|Config Initial| Initials determines configure option to set| i (indentation - integer), n (naming convention **), c (character count limit - integer), and r (generate report boolean), s (semi-colons boolean) |
-|Config Value| Value to assign to desired config option| c and i are integers only, see ** below for n.  s is a valid boolean see *** below|
+| Option | See next section | N/A |
 
 <br>
-** Naming Conventions available - pascal (PascalCase), snake (snake_case), and camel (camelCase)
 
-\*** Must be valid boolen value: true, TRUE, false, or FALSE
+### Configuration Options: --[OPTION]=[VALUE]
+
+| Option | Value | Use Case |
+| ------ | ----- | -------- |
+| i (indentation) | integer | Override allowed indentation multiple e.g. 2, 4, etc (Default: 2) |
+| n (naming convention) |  * | Override required naming convention (Default: camel) |
+| c (character count limit) | integer | Override number of charactors allowed in line (Default: 100) |
+| r (generate report) | boolean **| State if you want report generated (Default: true)
+| s (semi-colons) | boolean **| Specify if semi-colons are allowed at line endings (Default: true) |
+| v (verbose mode) | boolean ** | Prints out more info like config settings used and more (Default: false) |
+
+<br>
+<small>* Naming Conventions available - pascal (PascalCase), snake (snake_case), and camel (camelCase).</small>
+<br>
+
+<small>** Must be valid boolen value: true, TRUE, false, or FALSE.</small>
 
 
 ## Reports

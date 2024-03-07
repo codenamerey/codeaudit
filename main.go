@@ -33,6 +33,7 @@ func main() {
 	}
 	var fileType string
 	var check string
+	var verboseMode bool = false
 	root_directory := "./"
 	defaultCharacterLimit := 100
 	defaultVariableNamingConvention := "camel"
@@ -46,7 +47,7 @@ func main() {
 	}
 
 	if len(terminalArgs) >= 1 {
-		if !utils.IsConfigOption(terminalArgs[0]) {
+		if !utils.IsConfigFlag(terminalArgs[0]) {
 			check = terminalArgs[0]
 		}
 		fileType = ".js"
@@ -54,8 +55,8 @@ func main() {
 
 	if len(terminalArgs) >= 2 {
 
-		if !utils.IsConfigOption(terminalArgs[1]) {
-			if !utils.IsConfigOption(terminalArgs[0]) {
+		if !utils.IsConfigFlag(terminalArgs[1]) {
+			if !utils.IsConfigFlag(terminalArgs[0]) {
 				check = terminalArgs[0]
 			}
 			isFlag, err := regexp.MatchString("-", terminalArgs[1])
@@ -85,16 +86,16 @@ func main() {
 	}
 
 	if len(terminalArgs) >= 3 {
-		if !utils.IsConfigOption(terminalArgs[2]) {
+		if !utils.IsConfigFlag(terminalArgs[2]) {
 			root_directory = terminalArgs[2]
 		}
 	}
 
 	for a := 0; a < len(terminalArgs); a++ {
 		arg := terminalArgs[a]
-		if utils.IsConfigOption(arg) {
+		if utils.IsConfigFlag(arg) {
 			configTuple := strings.Split(arg, "=")
-			option := configTuple[0]
+			option := strings.Split(configTuple[0], "--")[1]
 			value := configTuple[1]
 
 			switch option {
@@ -127,6 +128,15 @@ func main() {
 				} else {
 					shouldGenerateFailureReport = willGenerateReport
 				}
+
+			case "v":
+				verbose, err := strconv.ParseBool(value)
+				if err != nil {
+					utils.WarningPrintLn(fmt.Sprintf("%s isn't a valid boolean value", value))
+				} else {
+					verboseMode = verbose
+				}
+
 			case "s":
 				newSemiColonUsage, err := strconv.ParseBool(value)
 				if err != nil {
@@ -138,7 +148,10 @@ func main() {
 		}
 	}
 
-	utils.DefaultPrintLn(fmt.Sprintf("Directory testing: %s", root_directory))
+	if verboseMode {
+		utils.WarningPrintLn("\nVerbose mode enabled\n")
+	}
+	utils.DefaultPrintLn(fmt.Sprintf("Directory testing: %s\n", root_directory))
 
 	var report models.ConsistencyReport
 	var foundFiles []string
@@ -173,19 +186,26 @@ func main() {
 	if len(foundFiles) == 0 {
 		utils.ErrorPrintLn("No files found in the specified directory matching the file type provided.")
 		return
-	} else {
-		utils.DefaultPrintLn(fmt.Sprintf("Number of files tested: %d", len(foundFiles)))
+	}
+
+	if verboseMode {
+		utils.WarningPrintLn("\nConfigurations Values used\n")
+		utils.DefaultPrintLn(fmt.Sprintf("Line Character Limit: %d", defaultCharacterLimit))
+		utils.DefaultPrintLn(fmt.Sprintf("Variable Naming Convention: %s", defaultVariableNamingConvention))
+		utils.DefaultPrintLn(fmt.Sprintf("Number of Indentation Spaces: %d", defaultIndentationSpaces))
+		utils.DefaultPrintLn(fmt.Sprintf("Allow Lines Ending In Semi-Colon: %t\n", defaultSemiColonUsage))
 	}
 
 	if checksRan {
-		fmt.Printf("Number of issues found: %d\n", len(report.IssuesFound))
+		utils.DefaultPrintLn(fmt.Sprintf("Number of files tested: %d", len(foundFiles)))
+		utils.DefaultPrintLn(fmt.Sprintf("Number of issues found: %d\n", len(report.IssuesFound)))
 		if shouldGenerateFailureReport {
 			reportCreated := utils.GenerateFailureReport(report, downloadsFolderPath)
 			if !reportCreated {
 				utils.WarningPrintLn("Error occurred while generating report")
 			} else {
-				utils.SuccessPrintLn("Report generated successfully")
-				println(fmt.Sprintf("Full Report can be found at %s/CodeAuditReport.csv", downloadsFolderPath))
+				utils.SuccessPrintLn("Report generated successfully\n")
+				utils.DefaultPrintLn(fmt.Sprintf("Full Report can be found at %s/CodeAuditReport.csv\n", downloadsFolderPath))
 			}
 		}
 	}

@@ -2,9 +2,9 @@ package utils
 
 import "strings"
 
-func IsConfigOption(value string) bool {
+func IsConfigFlag(value string) bool {
 	configTuple := strings.Split(value, "=")
-	if len(configTuple) == 2 {
+	if strings.Contains(value, "--") && len(configTuple) == 2 {
 		return true
 	} else {
 		return false

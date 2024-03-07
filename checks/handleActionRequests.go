@@ -8,11 +8,11 @@ import (
 
 func logSyntaxConsistencyScore(score int) {
 	if score < 65 {
-		utils.ErrorPrintLn(fmt.Sprintf("Total Syntax Consistency Score - - - >  %d%%", score))
+		utils.ErrorPrintLn(fmt.Sprintf("\nTotal Syntax Consistency Score - - - >  %d%%", score))
 	} else if score < 80 {
-		utils.WarningPrintLn(fmt.Sprintf("Total Syntax Consistency Score - - - >  %d%%", score))
+		utils.WarningPrintLn(fmt.Sprintf("\nTotal Syntax Consistency Score - - - >  %d%%", score))
 	} else {
-		utils.SuccessPrintLn(fmt.Sprintf("Total Syntax Consistency Score - - - >  %d%%", score))
+		utils.SuccessPrintLn(fmt.Sprintf("\nTotal Syntax Consistency Score - - - >  %d%%", score))
 	}
 }
 
