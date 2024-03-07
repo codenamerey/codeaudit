@@ -12,12 +12,19 @@ import (
 	"codeAudit/utils"
 )
 
+// TODO: Update readme to include the new flags and options and python support. Remove depreciated notes
+// TODO: Create more in depth mock files for testing in mock_directory in tests directory
+// TODO: Add unit tests for all checks and utils.
+// TODO: Instead of using a bunch of if statements and setting defaults, require the user provides atleast the file type, the check type and the root directory
+// TODO: Add a config flag for allowing the user to specify if the report should be save in cwd or in the downloads folder. Will need to update logic to allow for this. Currently only saves in downloads folder
+// TODO: Allow users to specify a config file that contains necessary options for the checks
+
 func main() {
 	downloadsFolderPath := "./"
 	userHomeDir, userHomeErr := os.UserHomeDir()
 	shouldGenerateFailureReport := true
 	if userHomeErr != nil {
-		println("user home dir get err", userHomeErr)
+		println("Error occurred finding home directory: r", userHomeErr.Error())
 	}
 	fmt.Printf("home dir %s", userHomeDir)
 	system := utils.GetOs()
@@ -38,8 +45,10 @@ func main() {
 	defaultCharacterLimit := 100
 	defaultVariableNamingConvention := "camel"
 	defaultIndentationSpaces := 2
+	defaultSemiColonUsage := true
 
 	terminalArgs := os.Args[1:]
+	println("terminal arguments received:", terminalArgs)
 	if len(terminalArgs) == 0 {
 		fileType = ".js"
 		check = "all"
@@ -95,7 +104,6 @@ func main() {
 		}
 	}
 
-	println("terminal arguments received")
 	for a := 0; a < len(terminalArgs); a++ {
 		arg := terminalArgs[a]
 		if utils.IsConfigOption(arg) {
@@ -133,22 +141,30 @@ func main() {
 				} else {
 					shouldGenerateFailureReport = willGenerateReport
 				}
+			case "s":
+				newSemiColonUsage, err := strconv.ParseBool(value)
+				if err != nil {
+					fmt.Printf("%s isn't a valid boolean value\n", value)
+				} else {
+					defaultSemiColonUsage = newSemiColonUsage
+				}
 			}
 		}
 	}
-	// TODO: Use report object to generate pdf or csv report
 	var report models.ConsistencyReport
 	checksRan := true
 
 	switch check {
 	case "all":
-		report = checks.PerformAllChecks(root_directory, fileType, defaultVariableNamingConvention, defaultIndentationSpaces, defaultCharacterLimit)
+		report = checks.PerformAllChecks(root_directory, fileType, defaultVariableNamingConvention, defaultIndentationSpaces, defaultCharacterLimit, defaultSemiColonUsage)
 	case "indent":
 		report = checks.PerformIndentationChecks(root_directory, fileType, defaultIndentationSpaces)
 	case "naming":
 		report = checks.PerformVariableNamingChecks(root_directory, fileType, defaultVariableNamingConvention)
 	case "char":
 		report = checks.PerformCharacterCountChecks(root_directory, fileType, defaultCharacterLimit)
+	case "semi":
+		report = checks.PerformSemiColonChecks(root_directory, fileType, defaultSemiColonUsage)
 	default:
 		checksRan = false
 		println("unexpected command please try again\n")

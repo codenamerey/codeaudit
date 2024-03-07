@@ -6,21 +6,44 @@ import (
 	"fmt"
 )
 
-func PerformAllChecks(root_directory string, fileType string, name_convention string, indentation int, char_count int) models.ConsistencyReport {
+func PerformAllChecks(root_directory string, fileType string, name_convention string, indentation int, char_count int, allow_semicolons bool) models.ConsistencyReport {
 	files := utils.GetCorrectFiles(root_directory, fileType)
 
-	result1 := MakeNamingConventionChecks(files, name_convention)
+	result1 := MakeNamingConventionChecks(files, name_convention, fileType)
 	result2 := MakeIndentionChecks(files, indentation)
 	result3 := MakeCharacterCountChecks(files, char_count)
+	result4 := MakeSemiColonChecks(files, allow_semicolons)
 
-	results := []models.CompleteCheckResult{result1, result2, result3}
-	checksMade := []string{"Variable Name Casing", "Indentation", "Character Count Limit Per Line"}
+	results := []models.CompleteCheckResult{result1, result2, result3, result4}
+	checksMade := []string{"Variable Name Casing", "Indentation", "Character Count Limit Per Line", "Semi-Colon Usage"}
 	issues := []models.IssueData{}
-	totalScore := (result1.FinalConsistencyScore + result2.FinalConsistencyScore + result3.FinalConsistencyScore) / 3
+	totalScore := (result1.FinalConsistencyScore + result2.FinalConsistencyScore + result3.FinalConsistencyScore + result4.FinalConsistencyScore) / 4
 
 	issues = append(issues, result1.IssuesFound...)
 	issues = append(issues, result2.IssuesFound...)
 	issues = append(issues, result3.IssuesFound...)
+	issues = append(issues, result4.IssuesFound...)
+
+	fullReport := models.ConsistencyReport{IssuesFound: issues, CheckResults: results, Checks: checksMade, CodeBaseConsistencyScore: totalScore}
+	for r := 0; r < len(results); r++ {
+		resultEntry := results[r]
+		fmt.Printf("Check \"%s\" score: %d%%\n", resultEntry.CheckType, resultEntry.FinalConsistencyScore)
+	}
+	fmt.Printf("\nTotal Syntax Consistency Score - - - >  %d%%\n", fullReport.CodeBaseConsistencyScore)
+	return fullReport
+
+}
+
+func PerformSemiColonChecks(root_directory string, fileType string, allow_semicolons bool) models.ConsistencyReport {
+	files := utils.GetCorrectFiles(root_directory, fileType)
+
+	result1 := MakeSemiColonChecks(files, allow_semicolons)
+
+	results := []models.CompleteCheckResult{result1}
+	checksMade := []string{"Semi-Colon Usage"}
+	issues := []models.IssueData{}
+	issues = append(issues, result1.IssuesFound...)
+	totalScore := result1.FinalConsistencyScore
 
 	fullReport := models.ConsistencyReport{IssuesFound: issues, CheckResults: results, Checks: checksMade, CodeBaseConsistencyScore: totalScore}
 	for r := 0; r < len(results); r++ {
@@ -55,7 +78,7 @@ func PerformCharacterCountChecks(root_directory string, fileType string, char_co
 func PerformVariableNamingChecks(root_directory string, fileType string, name_convention string) models.ConsistencyReport {
 	files := utils.GetCorrectFiles(root_directory, fileType)
 
-	result1 := MakeNamingConventionChecks(files, name_convention)
+	result1 := MakeNamingConventionChecks(files, name_convention, fileType)
 
 	results := []models.CompleteCheckResult{result1}
 	checksMade := []string{"Variable Name Casing"}
