@@ -6,6 +6,16 @@ import (
 	"fmt"
 )
 
+func logSyntaxConsistencyScore(score int) {
+	if score < 65 {
+		utils.ErrorPrintLn(fmt.Sprintf("Total Syntax Consistency Score - - - >  %d%%", score))
+	} else if score < 80 {
+		utils.WarningPrintLn(fmt.Sprintf("Total Syntax Consistency Score - - - >  %d%%", score))
+	} else {
+		utils.SuccessPrintLn(fmt.Sprintf("Total Syntax Consistency Score - - - >  %d%%", score))
+	}
+}
+
 func PerformAllChecks(root_directory string, fileType string, name_convention string, indentation int, char_count int, allow_semicolons bool) models.ConsistencyReport {
 	files := utils.GetCorrectFiles(root_directory, fileType)
 
@@ -27,9 +37,10 @@ func PerformAllChecks(root_directory string, fileType string, name_convention st
 	fullReport := models.ConsistencyReport{IssuesFound: issues, CheckResults: results, Checks: checksMade, CodeBaseConsistencyScore: totalScore}
 	for r := 0; r < len(results); r++ {
 		resultEntry := results[r]
-		fmt.Printf("Check \"%s\" score: %d%%\n", resultEntry.CheckType, resultEntry.FinalConsistencyScore)
+		utils.InfoPrintLn(fmt.Sprintf("Check \"%s\" score: %d%%", resultEntry.CheckType, resultEntry.FinalConsistencyScore))
 	}
-	fmt.Printf("\nTotal Syntax Consistency Score - - - >  %d%%\n", fullReport.CodeBaseConsistencyScore)
+
+	logSyntaxConsistencyScore(fullReport.CodeBaseConsistencyScore)
 	return fullReport
 
 }
@@ -48,9 +59,9 @@ func PerformSemiColonChecks(root_directory string, fileType string, allow_semico
 	fullReport := models.ConsistencyReport{IssuesFound: issues, CheckResults: results, Checks: checksMade, CodeBaseConsistencyScore: totalScore}
 	for r := 0; r < len(results); r++ {
 		resultEntry := results[r]
-		fmt.Printf("Check \"%s\" score: %d%%\n", resultEntry.CheckType, resultEntry.FinalConsistencyScore)
+		utils.InfoPrintLn(fmt.Sprintf("Check \"%s\" score: %d%%", resultEntry.CheckType, resultEntry.FinalConsistencyScore))
 	}
-	fmt.Printf("\nTotal Syntax Consistency Score - - - >  %d%%\n", fullReport.CodeBaseConsistencyScore)
+	logSyntaxConsistencyScore(fullReport.CodeBaseConsistencyScore)
 	return fullReport
 
 }
@@ -69,9 +80,9 @@ func PerformCharacterCountChecks(root_directory string, fileType string, char_co
 	fullReport := models.ConsistencyReport{IssuesFound: issues, CheckResults: results, Checks: checksMade, CodeBaseConsistencyScore: totalScore}
 	for r := 0; r < len(results); r++ {
 		resultEntry := results[r]
-		fmt.Printf("Check \"%s\" score: %d%%\n", resultEntry.CheckType, resultEntry.FinalConsistencyScore)
+		utils.InfoPrintLn(fmt.Sprintf("Check \"%s\" score: %d%%", resultEntry.CheckType, resultEntry.FinalConsistencyScore))
 	}
-	fmt.Printf("\nTotal Syntax Consistency Score - - - >  %d%%\n", fullReport.CodeBaseConsistencyScore)
+	logSyntaxConsistencyScore(fullReport.CodeBaseConsistencyScore)
 	return fullReport
 }
 
@@ -89,9 +100,9 @@ func PerformVariableNamingChecks(root_directory string, fileType string, name_co
 	fullReport := models.ConsistencyReport{IssuesFound: issues, CheckResults: results, Checks: checksMade, CodeBaseConsistencyScore: totalScore}
 	for r := 0; r < len(results); r++ {
 		resultEntry := results[r]
-		fmt.Printf("Check \"%s\" score: %d%%\n", resultEntry.CheckType, resultEntry.FinalConsistencyScore)
+		utils.InfoPrintLn(fmt.Sprintf("Check \"%s\" score: %d%%", resultEntry.CheckType, resultEntry.FinalConsistencyScore))
 	}
-	fmt.Printf("\nTotal Syntax Consistency Score - - - >  %d%%\n", fullReport.CodeBaseConsistencyScore)
+	logSyntaxConsistencyScore(fullReport.CodeBaseConsistencyScore)
 	return fullReport
 }
 
@@ -109,8 +120,8 @@ func PerformIndentationChecks(root_directory string, fileType string, indentatio
 	fullReport := models.ConsistencyReport{IssuesFound: issues, CheckResults: results, Checks: checksMade, CodeBaseConsistencyScore: totalScore}
 	for r := 0; r < len(results); r++ {
 		resultEntry := results[r]
-		fmt.Printf("Check \"%s\" score: %d%%\n", resultEntry.CheckType, resultEntry.FinalConsistencyScore)
+		utils.InfoPrintLn(fmt.Sprintf("Check \"%s\" score: %d%%", resultEntry.CheckType, resultEntry.FinalConsistencyScore))
 	}
-	fmt.Printf("\nTotal Syntax Consistency Score - - - >  %d%%\n", fullReport.CodeBaseConsistencyScore)
+	logSyntaxConsistencyScore(fullReport.CodeBaseConsistencyScore)
 	return fullReport
 }

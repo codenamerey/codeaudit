@@ -10,6 +10,7 @@ import (
 	"strings"
 
 	"codeAudit/models"
+	"codeAudit/utils"
 
 	"github.com/dariubs/percent"
 )
@@ -109,6 +110,7 @@ func MakeNamingConventionChecks(files []string, variableNamingConvention string,
 	scores := []int{}
 	issues := []models.IssueData{}
 	for i := 0; i < len(files); i++ {
+		utils.InfoPrintLn(fmt.Sprintf("Performing naming convention checks on file %s", files[i]))
 		result1 := RunNamingConventionCheck(files[i], variableNamingConvention, file_extension)
 		scores = append(scores, result1.ConsistencyScore)
 		for n := 0; n < len(result1.LinesFailed); n++ {

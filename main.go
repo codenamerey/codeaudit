@@ -12,21 +12,13 @@ import (
 	"codeAudit/utils"
 )
 
-// TODO: Update readme to include the new flags and options and python support. Remove depreciated notes
-// TODO: Create more in depth mock files for testing in mock_directory in tests directory
-// TODO: Add unit tests for all checks and utils.
-// TODO: Instead of using a bunch of if statements and setting defaults, require the user provides atleast the file type, the check type and the root directory
-// TODO: Add a config flag for allowing the user to specify if the report should be save in cwd or in the downloads folder. Will need to update logic to allow for this. Currently only saves in downloads folder
-// TODO: Allow users to specify a config file that contains necessary options for the checks
-
 func main() {
 	downloadsFolderPath := "./"
 	userHomeDir, userHomeErr := os.UserHomeDir()
 	shouldGenerateFailureReport := true
 	if userHomeErr != nil {
-		println("Error occurred finding home directory: r", userHomeErr.Error())
+		utils.WarningPrintLn(fmt.Sprintf("Error occurred finding home directory: %s", userHomeErr.Error()))
 	}
-	fmt.Printf("home dir %s", userHomeDir)
 	system := utils.GetOs()
 	if system == "darwin" {
 		downloadsFolderPath = fmt.Sprintf("%s/Downloads", userHomeDir)
@@ -48,7 +40,6 @@ func main() {
 	defaultSemiColonUsage := true
 
 	terminalArgs := os.Args[1:]
-	println("terminal arguments received:", terminalArgs)
 	if len(terminalArgs) == 0 {
 		fileType = ".js"
 		check = "all"
@@ -69,7 +60,6 @@ func main() {
 			}
 			isFlag, err := regexp.MatchString("-", terminalArgs[1])
 			if err != nil {
-				fmt.Println("err 2")
 
 				panic(err)
 			}
@@ -91,7 +81,6 @@ func main() {
 				}
 
 			} else {
-				fmt.Println("err 3")
 				panic("Unknown value for flag found")
 			}
 		}
@@ -100,7 +89,6 @@ func main() {
 	if len(terminalArgs) >= 3 {
 		if !utils.IsConfigOption(terminalArgs[2]) {
 			root_directory = terminalArgs[2]
-			fmt.Printf("path found in terminal %s\n", root_directory)
 		}
 	}
 
@@ -115,7 +103,7 @@ func main() {
 			case "i":
 				newIndentation, err := strconv.Atoi(value)
 				if err != nil {
-					fmt.Printf("Input %s wasn't able to be converted to a number to use as new number of indentation. Used default value of 2\n", value)
+					utils.WarningPrintLn(fmt.Sprintf("Input %s wasn't able to be converted to a number to use as new number of indentation. Used default value of 2\n", value))
 				} else {
 					defaultIndentationSpaces = newIndentation
 				}
@@ -123,34 +111,37 @@ func main() {
 			case "c":
 				newCharacterLineLimit, err := strconv.Atoi(value)
 				if err != nil {
-					fmt.Printf("Input %s wasn't able to be converted to a number to use as new character limit. Used default value of 100\n", value)
+					utils.WarningPrintLn(fmt.Sprintf("Input %s wasn't able to be converted to a number to use as new character limit. Used default value of 100", value))
 				} else {
 					defaultCharacterLimit = newCharacterLineLimit
 				}
 			case "n":
 				isValidConventions := utils.IsValidNamingConvention(value)
 				if !isValidConventions {
-					fmt.Printf("%s isn't a valid or supported variable naming convention. See docs\n", value)
+					utils.WarningPrintLn(fmt.Sprintf("%s isn't a valid or supported variable naming convention. See docs", value))
 				} else {
 					defaultVariableNamingConvention = value
 				}
 			case "r":
 				willGenerateReport, err := strconv.ParseBool(value)
 				if err != nil {
-					fmt.Printf("%s isn't a valid boolean value\n", value)
+					utils.WarningPrintLn(fmt.Sprintf("%s isn't a valid boolean value", value))
 				} else {
 					shouldGenerateFailureReport = willGenerateReport
 				}
 			case "s":
 				newSemiColonUsage, err := strconv.ParseBool(value)
 				if err != nil {
-					fmt.Printf("%s isn't a valid boolean value\n", value)
+					utils.WarningPrintLn(fmt.Sprintf("%s isn't a valid boolean value", value))
 				} else {
 					defaultSemiColonUsage = newSemiColonUsage
 				}
 			}
 		}
 	}
+
+	utils.DefaultPrintLn(fmt.Sprintf("Directory testing: %s", root_directory))
+
 	var report models.ConsistencyReport
 	checksRan := true
 
@@ -167,7 +158,7 @@ func main() {
 		report = checks.PerformSemiColonChecks(root_directory, fileType, defaultSemiColonUsage)
 	default:
 		checksRan = false
-		println("unexpected command please try again\n")
+		utils.ErrorPrintLn("unexpected command please try again")
 	}
 
 	if checksRan {
@@ -175,7 +166,10 @@ func main() {
 		if shouldGenerateFailureReport {
 			reportCreated := utils.GenerateFailureReport(report, downloadsFolderPath)
 			if !reportCreated {
-				println("Error occurred while generating report")
+				utils.WarningPrintLn("Error occurred while generating report")
+			} else {
+				utils.SuccessPrintLn("Report generated successfully")
+				println(fmt.Sprintf("Full Report can be found at %s/CodeAuditReport.csv", downloadsFolderPath))
 			}
 		}
 	}

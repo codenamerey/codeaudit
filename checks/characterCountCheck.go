@@ -3,6 +3,7 @@ package checks
 import (
 	"bufio"
 	"codeAudit/models"
+	"codeAudit/utils"
 	"fmt"
 	"math"
 	"os"
@@ -46,6 +47,7 @@ func MakeCharacterCountChecks(files []string, charactersAllowed int) models.Comp
 	scores := []int{}
 	issues := []models.IssueData{}
 	for i := 0; i < len(files); i++ {
+		utils.InfoPrintLn(fmt.Sprintf("Performing character count checks on file %s", files[i]))
 		result := runCharacterCountCheck(files[i], charactersAllowed)
 		scores = append(scores, result.ConsistencyScore)
 		for n := 0; n < len(result.LinesFailed); n++ {
