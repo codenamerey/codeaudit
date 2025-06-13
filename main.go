@@ -39,6 +39,7 @@ func main() {
 	defaultVariableNamingConvention := "camel"
 	defaultIndentationSpaces := 2
 	defaultSemiColonUsage := true
+	defaultPreferDoubleQuotes := true
 
 	terminalArgs := os.Args[1:]
 	if len(terminalArgs) == 0 {
@@ -144,6 +145,15 @@ func main() {
 				} else {
 					defaultSemiColonUsage = newSemiColonUsage
 				}
+
+			case "q":
+				preferDoubleQuotes, err := strconv.ParseBool(value)
+				if err != nil {
+					utils.WarningPrintLn(fmt.Sprintf("%s isn't a valid boolean value", value))
+				} else {
+					defaultPreferDoubleQuotes = preferDoubleQuotes
+				}
+
 			}
 		}
 	}
@@ -159,7 +169,7 @@ func main() {
 
 	switch check {
 	case "all":
-		result, files := checks.PerformAllChecks(root_directory, fileType, defaultVariableNamingConvention, defaultIndentationSpaces, defaultCharacterLimit, defaultSemiColonUsage)
+		result, files := checks.PerformAllChecks(root_directory, fileType, defaultVariableNamingConvention, defaultIndentationSpaces, defaultCharacterLimit, defaultSemiColonUsage, defaultPreferDoubleQuotes)
 		report = result
 		foundFiles = files
 	case "indent":
@@ -178,6 +188,10 @@ func main() {
 		result, files := checks.PerformSemiColonChecks(root_directory, fileType, defaultSemiColonUsage)
 		report = result
 		foundFiles = files
+	case "quote":
+		result, files := checks.PerformQuotationStyleChecks(root_directory, fileType, defaultPreferDoubleQuotes)
+		report = result
+		foundFiles = files
 	default:
 		checksRan = false
 		utils.ErrorPrintLn("unexpected command please try again")
@@ -194,6 +208,7 @@ func main() {
 		utils.DefaultPrintLn(fmt.Sprintf("Variable Naming Convention: %s", defaultVariableNamingConvention))
 		utils.DefaultPrintLn(fmt.Sprintf("Number of Indentation Spaces: %d", defaultIndentationSpaces))
 		utils.DefaultPrintLn(fmt.Sprintf("Allow Lines Ending In Semi-Colon: %t\n", defaultSemiColonUsage))
+		utils.DefaultPrintLn(fmt.Sprintf("Prefer Double Quotes: %t\n", defaultPreferDoubleQuotes))
 	}
 
 	if checksRan {

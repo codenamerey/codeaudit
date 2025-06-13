@@ -5,7 +5,7 @@ last_name = "Musk"
 def get_full_name(first_name, last_name):
   return first_name + last_name
 
-def get_first_name(name): 
+def get_first_name(name):
   return name
 
 def greetPerson(name, age):

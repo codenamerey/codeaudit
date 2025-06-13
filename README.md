@@ -1,8 +1,8 @@
 # CodeAudit - CLI Tool for verifying syntax consistency of your codebases
 
-This simple terminal tool allows you to check for syntax consistency around various items such as naming, spacing, semi-colons, etc. I guess it's pretty much a linter 😂.
+This simple terminal tool allows you to check for syntax consistency around various items such as naming, spacing, semi-colons, quotaions, etc. I guess it's pretty much a linter 😂.
 
-I created this tool, because I realized a lot of teams focus on things like optimization, whether to use a simple for-loop or array methods, and strict typing to solve and find bugs. While these are good to discuss, I have found that sometimes bugs can come from simple things, such as miss naming variable names, indentation issues (Python or callback hell situations), and just lack of consistency throughout codebases. 
+I created this tool, because I realized a lot of teams focus on things like optimization, whether to use a simple for-loop or array methods, and strict typing to solve and find bugs. While these are good to discuss, I have found that sometimes bugs can come from simple things, such as miss naming variable names, indentation issues (Python or callback hell situations), and just lack of consistency throughout codebases.
 
 This testing tool will allow you to set certain syntax preferences, dictate which project to search, and generate reports that show which files and lines failed checks, which checks were ran, and provide overall scores for the validity of your codebase.
 
@@ -16,13 +16,14 @@ Currently supports Vanilla Javascript and Python files, but other languages will
 |Indentation| Checks indentation spacing for desire amount (e.g. 2 or 4)|
 |Line Character Count| Checks each line in each found file to make sure character count doesn't exceed specified limit (80-100 is most readible)|
 |Semi-Colons| Checks line endings for semi-colon usage (This is primarily for JavaScript users)
+|Quotation Style| Checks for consistent use of single or double quotes in strings|
 
 
 ### Languages Coming Soon:
 - TypeScript
 - Go
 
-## Startup Instructions  
+## Startup Instructions
 
 ### Basic Example:
 
@@ -55,7 +56,7 @@ _<small> <span>__Cool Fact:__</span> You can also install package globally by se
 
 | Command | Purpose | values |
 |---------|---------|--------|
-| Check Type | The type of check you would like to make  |  all, indent, naming, char, semi. Default: all|
+| Check Type | The type of check you would like to make  |  all, indent, naming, char, semi, quote. Default: all|
 | Language Option | Dictates type file extension to query for | j (javascript), p (python). Default: j |
 | Path | Path to desired desired directory to recursively search through for files| default ./ (cwd)|
 | Option | See next section | N/A |
@@ -71,6 +72,7 @@ _<small> <span>__Cool Fact:__</span> You can also install package globally by se
 | c (character count limit) | integer | Override number of charactors allowed in line (Default: 100) |
 | r (generate report) | boolean **| State if you want report generated (Default: true)
 | s (semi-colons) | boolean **| Specify if semi-colons are allowed at line endings (Default: true) |
+| q (quotation style) | boolean **| Prefer double quotes when true, single quotes when false (Default: true) |
 | v (verbose mode) | boolean ** | Prints out more info like config settings used and more (Default: false) |
 
 <br>
