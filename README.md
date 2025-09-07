@@ -1,25 +1,25 @@
 # CodeAudit - CLI Tool for verifying syntax consistency of your codebases
 
-This simple terminal tool allows you to check for syntax consistency around various items such as naming, spacing, semi-colons, quotaions, etc. I guess it's pretty much a linter 😂.
+This simple terminal tool allows you to check for syntax consistency around various items such as naming, spacing, semi-colons, quotations, etc. I guess it's pretty much a linter 😂.
 
 I created this tool, because I realized a lot of teams focus on things like optimization, whether to use a simple for-loop or array methods, and strict typing to solve and find bugs. While these are good to discuss, I have found that sometimes bugs can come from simple things, such as miss naming variable names, indentation issues (Python or callback hell situations), and just lack of consistency throughout codebases.
 
 This testing tool will allow you to set certain syntax preferences, dictate which project to search, and generate reports that show which files and lines failed checks, which checks were ran, and provide overall scores for the validity of your codebase.
 
-
 Currently supports Vanilla Javascript and Python files, but other languages will be available.
 
 ### Checks Available
-|Check|Description|
-|----|-----|
-|Naming Convention| Checks variables and functions for correct casing (e.g. snake_case)|
-|Indentation| Checks indentation spacing for desire amount (e.g. 2 or 4)|
-|Line Character Count| Checks each line in each found file to make sure character count doesn't exceed specified limit (80-100 is most readible)|
-|Semi-Colons| Checks line endings for semi-colon usage (This is primarily for JavaScript users)
-|Quotation Style| Checks for consistent use of single or double quotes in strings|
 
+| Check                | Description                                                                                                               |
+| -------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| Naming Convention    | Checks variables and functions for correct casing (e.g. snake_case)                                                       |
+| Indentation          | Checks indentation spacing for desire amount (e.g. 2 or 4)                                                                |
+| Line Character Count | Checks each line in each found file to make sure character count doesn't exceed specified limit (80-100 is most readible) |
+| Semi-Colons          | Checks line endings for semi-colon usage (This is primarily for JavaScript users)                                         |
+| Quotation Style      | Checks for consistent use of single or double quotes in strings                                                           |
 
 ### Languages Coming Soon:
+
 - TypeScript
 - Go
 
@@ -39,8 +39,7 @@ go build -o [DESIRED_NAME_OF_EXECUTABLE]
 
 This example will run indentation checks on the current working directory and display the overall score for your cwd's javascript files. It will also generate a full report in your download folder.
 
-
-_<small> <span>__Cool Fact:__</span> You can also install package globally by setting the PATH variable in terminal to allow using this tool anywhere. Refer to this Golang [Documentation]('https://go.dev/doc/tutorial/compile-install) on how to do so.</small>_
+_<small> <span>**Cool Fact:**</span> You can also install package globally by setting the PATH variable in terminal to allow using this tool anywhere. Refer to this Golang [Documentation]('https://go.dev/doc/tutorial/compile-install) on how to do so.</small>_
 
 \* _Must have Go install on local machine_
 
@@ -54,40 +53,38 @@ _<small> <span>__Cool Fact:__</span> You can also install package globally by se
 
 ### Argument Components BreakDown
 
-| Command | Purpose | values |
-|---------|---------|--------|
-| Check Type | The type of check you would like to make  |  all, indent, naming, char, semi, quote. Default: all|
-| Language Option | Dictates type file extension to query for | j (javascript), p (python). Default: j |
-| Path | Path to desired desired directory to recursively search through for files| default ./ (cwd)|
-| Option | See next section | N/A |
+| Command         | Purpose                                                                   | values                                               |
+| --------------- | ------------------------------------------------------------------------- | ---------------------------------------------------- |
+| Check Type      | The type of check you would like to make                                  | all, indent, naming, char, semi, quote. Default: all |
+| Language Option | Dictates type file extension to query for                                 | j (javascript), p (python). Default: j               |
+| Path            | Path to desired desired directory to recursively search through for files | default ./ (cwd)                                     |
+| Option          | See next section                                                          | N/A                                                  |
 
 <br>
 
 ### Configuration Options: --[OPTION]=[VALUE]
 
-| Option | Value | Use Case |
-| ------ | ----- | -------- |
-| i (indentation) | integer | Override allowed indentation multiple e.g. 2, 4, etc (Default: 2) |
-| n (naming convention) |  * | Override required naming convention (Default: camel) |
-| c (character count limit) | integer | Override number of charactors allowed in line (Default: 100) |
-| r (generate report) | boolean **| State if you want report generated (Default: true)
-| s (semi-colons) | boolean **| Specify if semi-colons are allowed at line endings (Default: true) |
-| q (quotation style) | boolean **| Prefer double quotes when true, single quotes when false (Default: true) |
-| v (verbose mode) | boolean ** | Prints out more info like config settings used and more (Default: false) |
+| Option                    | Value        | Use Case                                                                 |
+| ------------------------- | ------------ | ------------------------------------------------------------------------ |
+| i (indentation)           | integer      | Override allowed indentation multiple e.g. 2, 4, etc (Default: 2)        |
+| n (naming convention)     | \*           | Override required naming convention (Default: camel)                     |
+| c (character count limit) | integer      | Override number of charactors allowed in line (Default: 100)             |
+| r (generate report)       | boolean \*\* | State if you want report generated (Default: true)                       |
+| s (semi-colons)           | boolean \*\* | Specify if semi-colons are allowed at line endings (Default: true)       |
+| q (quotation style)       | boolean \*\* | Prefer double quotes when true, single quotes when false (Default: true) |
+| v (verbose mode)          | boolean \*\* | Prints out more info like config settings used and more (Default: false) |
 
 <br>
 <small>* Naming Conventions available - pascal (PascalCase), snake (snake_case), and camel (camelCase).</small>
 <br>
 
-<small>** Must be valid boolen value: true, TRUE, false, or FALSE.</small>
-
+<small>\*\* Must be valid boolen value: true, TRUE, false, or FALSE.</small>
 
 ## Reports
 
 This tool generates a simple failure report in the form of a a csv file called `codeAuditReport.csv`. This file after running the commands above will be found downloads folder in file system. It will list all files that had a failed validation checks and helpful information (like line number where errored), to help with debug and addressing syntax errors.
 
-__Format__ : File Path, Line Number (where error occurred), Check Made (that failed), and issue (message clarifying error).
-
+**Format** : File Path, Line Number (where error occurred), Check Made (that failed), and issue (message clarifying error).
 
 ### Feedback Encouraged!
 
