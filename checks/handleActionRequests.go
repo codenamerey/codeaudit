@@ -28,7 +28,7 @@ func PerformAllChecks(root_directory string, fileType string, name_convention st
 	result5 := MakeQuotationStyleChecks(files, preferDouble, fileType)
 
 	results := []models.CompleteCheckResult{result1, result2, result3, result4, result5}
-	checksMade := []string{"Variable Name Casing", "Indentation", "Character Count Limit Per Line", "Semi-Colon Usage", "Quoutation Style"}
+	checksMade := []string{"Variable Name Casing", "Indentation", "Character Count Limit Per Line", "Semi-Colon Usage", "Quotation Style"}
 	issues := []models.IssueData{}
 	totalScore := (result1.FinalConsistencyScore + result2.FinalConsistencyScore + result3.FinalConsistencyScore + result4.FinalConsistencyScore + result5.FinalConsistencyScore) / 5
 
